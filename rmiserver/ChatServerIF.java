@@ -12,5 +12,6 @@ public interface ChatServerIF extends Remote {
     String createRoom(String RoomName) throws RemoteException;
     String ShowAllRooms() throws RemoteException;
     String joinRoom(String RoomName,ChatClientIF client) throws RemoteException;
+    String leaveRoom(String RoomName,ChatClientIF client) throws RemoteException;
 
 }

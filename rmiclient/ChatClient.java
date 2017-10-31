@@ -85,6 +85,27 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientIF,Runn
                         msg+=room+", ";
                     }
                 }
+                else if(words[0].equals("jleave")){
+                    clientSendCommand=true;
+                    boolean joinedRoom=false;
+                    for (int i=0;i<this.myRooms.size();i++){
+                        if(myRooms.get(i).equals(words[1])){
+                            this.currentRoom=words[1];
+                            //msg="you have switched to "+words[1];
+                            joinedRoom=true;
+                            myRooms.remove(i);
+                            if(this.currentRoom.equals(words[1])){
+                                this.currentRoom="";
+                            }
+                        }
+                    }
+                    if (joinedRoom){
+                        msg=chatServer.leaveRoom(words[1],this);
+                    }
+                    else {
+                        msg="you have to join this room first.";
+                    }
+                }
                 if (clientSendCommand){
                     System.out.println("System: "+msg);
                 }

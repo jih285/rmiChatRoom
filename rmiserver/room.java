@@ -29,7 +29,7 @@ public class room{
         this.members.add(member);
     }
 
-    public void remove_member(Socket member)
+    public void remove_member(ChatClientIF member)
     {
         members.remove(member);
     }

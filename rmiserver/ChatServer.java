@@ -101,4 +101,23 @@ public class ChatServer extends UnicastRemoteObject implements ChatServerIF {
         }
         return msg;
     }
+
+    public String leaveRoom(String RoomName,ChatClientIF client) throws RemoteException{
+        boolean roomFound=false;
+        for(int i=0;i<rooms.size();i++)
+        {
+            if (rooms.get(i).getRoom_name().equals(RoomName))
+            {
+                System.out.println("user joined chat room "+RoomName);
+                rooms.get(i).remove_member(client);
+                roomFound=true;
+            }
+        }
+        if (roomFound) {
+            return "you have left room: " + RoomName;
+        }
+        else {
+            return "Error! Room exist in client-end, but not in server-end";
+        }
+    }
 }
