@@ -3,19 +3,50 @@ package rmiserver;
 import rmiclient.ChatClientIF;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
+import java.util.*;
+
 public class ChatServer extends UnicastRemoteObject implements ChatServerIF {
     private ArrayList<ChatClientIF> chatClients;
     private ArrayList<room> rooms;
 
+
+
     protected ChatServer() throws RemoteException{
         chatClients=new ArrayList<ChatClientIF>();
         rooms=new ArrayList<room>();
+        //set timer to check if any room are expired every 24 hours
+        Timer timer = new Timer ();
+        TimerTask t = new TimerTask () {
+            @Override
+            public void run () {
+                deleteOldRooms();
+            }
+        };
+        timer.schedule (t, 0l, 1000*60*60*24);
     }
 
     @Override
     public void registerChatClient(ChatClientIF client) throws RemoteException {
         this.chatClients.add(client);
+    }
+
+    public void deleteOldRooms()
+    {
+        Date today=new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(today);
+        for (int i=0;i<this.rooms.size();i++)
+        {
+            cal.setTime(rooms.get(i).getLastUpdate());
+            cal.add(Calendar.DATE, 7);
+            if (today.after(cal.getTime()))
+            {
+                String removedRoom=rooms.get(i).getRoom_name();
+                rooms.remove(rooms.get(i));
+                System.out.println("room: "+removedRoom+"has been deleted for inactive for 7 days");
+            }
+
+        }
     }
 
     @Override
