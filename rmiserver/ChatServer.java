@@ -4,7 +4,6 @@ import rmiclient.ChatClientIF;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.List;
 public class ChatServer extends UnicastRemoteObject implements ChatServerIF {
     private ArrayList<ChatClientIF> chatClients;
     private ArrayList<room> rooms;
@@ -31,9 +30,8 @@ public class ChatServer extends UnicastRemoteObject implements ChatServerIF {
         if (rooms.size()!=0) {
             for (int i = 0; i < rooms.size(); i++) {
                 if (rooms.get(i).getRoom_name().equals(room)) {
-                    System.out.println("find this room");
+                    rooms.get(i).chatlog+=msg+"\n";
                     for (int j = 0; j < rooms.get(i).size(); j++) {
-                        System.out.println("biubiubiu");
                         rooms.get(i).getMember(j).retriveMsg(msg);
                     }
                     break;
@@ -56,12 +54,12 @@ public class ChatServer extends UnicastRemoteObject implements ChatServerIF {
         if (!roomexist)
         {
             rooms.add(new room(RoomName));
-            System.out.println("room:" + RoomName + " has been created");
-            msg = "room:" + RoomName + " has been created";
+            System.out.println("[room:" + RoomName + "] has been created");
+            msg = "[room:" + RoomName + "] has been created";
         }
         else
         {
-            msg ="room: "+RoomName+" has been created, please choose another name";
+            msg ="[room: "+RoomName+"] has been created, please choose another name";
         }
 
         return msg;
@@ -94,6 +92,7 @@ public class ChatServer extends UnicastRemoteObject implements ChatServerIF {
                 if (!rooms.get(i).chatlog.equals(""))
                     chatHistory=rooms.get(i).chatlog+"\n---------------------------------------chat history--------------------------------------------";
                 msg="you have join in chat room "+RoomName+"\n"+chatHistory;
+                client.retriveMsg(chatHistory);
                 room_exist=true;
             }
         }
