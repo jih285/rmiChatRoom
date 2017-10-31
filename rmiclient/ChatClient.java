@@ -71,6 +71,20 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientIF,Runn
                     }
                     clientSendCommand=true;
                 }
+                else if (words[0].equals("jrename"))
+                {
+                    clientSendCommand=true;
+                    this.name=words[1];
+                    msg="your name has been reset as "+words[1];
+                }
+                else if (words[0].equals("jshowmyrooms"))
+                {
+                    clientSendCommand=true;
+                    msg="joined rooms: ";
+                    for (String room: this.myRooms) {
+                        msg+=room+", ";
+                    }
+                }
                 if (clientSendCommand){
                     System.out.println("System: "+msg);
                 }
